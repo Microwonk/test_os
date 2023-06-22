@@ -11,10 +11,14 @@ use test_os::println;
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
+    test_os::init();
+
+    // as before
     #[cfg(test)]
     test_main();
 
-    loop {}
+    println!("It did not crash!");
+    test_os::hlt_loop();
 }
 
 /// This function is called on panic.
@@ -22,7 +26,7 @@ pub extern "C" fn _start() -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    test_os::hlt_loop();
 }
 
 #[cfg(test)]
