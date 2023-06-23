@@ -112,7 +112,9 @@ impl Writer {
             }
         }
     }
+}
 
+impl Writer {
     pub fn write_string(&mut self, s: &str) {
         for byte in s.bytes()  {
             match byte {
@@ -123,7 +125,9 @@ impl Writer {
             }
         }
     }
+}
 
+impl Writer {
     fn new_line(&mut self) {
         for row in 1..BUFFER_HEIGHT {
             for col in 0..BUFFER_WIDTH {
@@ -134,7 +138,9 @@ impl Writer {
         self.clear_row(BUFFER_HEIGHT - 1);
         self.column_position = 0;
     }
+}
 
+impl Writer {
     fn clear_row(&mut self, row: usize) {
         let blank = ScreenChar {
             ascii_character: b' ',

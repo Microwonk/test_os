@@ -3,7 +3,6 @@ use spin::Mutex;
 use lazy_static::lazy_static;
 
 // macros
-
 #[doc(hidden)]
 pub fn _print(args: ::core::fmt::Arguments) {
     use core::fmt::Write;

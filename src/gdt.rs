@@ -3,8 +3,21 @@ use x86_64::structures::tss::TaskStateSegment;
 use x86_64::structures::gdt::{GlobalDescriptorTable, Descriptor, SegmentSelector};
 use lazy_static::lazy_static;
 
+// inits
+pub fn init() {
+    use x86_64::instructions::tables::load_tss;
+    use x86_64::instructions::segmentation::{CS, Segment};
+
+    GDT.0.load();
+    unsafe {
+        CS::set_reg(GDT.1.code_selector);
+        load_tss(GDT.1.tss_selector);
+    }
+}
+
 pub const DOUBLE_FAULT_IST_INDEX: u16 = 0;
 
+// the TSS
 lazy_static! {
     static ref TSS: TaskStateSegment = {
         let mut tss = TaskStateSegment::new();
@@ -20,6 +33,7 @@ lazy_static! {
     };
 }
 
+// The GDT
 lazy_static! {
     static ref GDT: (GlobalDescriptorTable, Selectors) = {
         let mut gdt = GlobalDescriptorTable::new();
@@ -29,18 +43,8 @@ lazy_static! {
     };
 }
 
+// struct of SegmentSelectors -> TSS & code
 struct Selectors {
     code_selector: SegmentSelector,
     tss_selector: SegmentSelector,
-}
-
-pub fn init() {
-    use x86_64::instructions::tables::load_tss;
-    use x86_64::instructions::segmentation::{CS, Segment};
-
-    GDT.0.load();
-    unsafe {
-        CS::set_reg(GDT.1.code_selector);
-        load_tss(GDT.1.tss_selector);
-    }
 }
